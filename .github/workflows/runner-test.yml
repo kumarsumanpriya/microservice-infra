@@ -1,0 +1,34 @@
+name: Self Hosted Runner Test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runner-test:
+    name: Test Windows Runner
+    runs-on: [self-hosted, Windows, X64]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Display Runner Information
+        shell: powershell
+        run: |
+          Write-Host "GitHub Actions Runner is working!"
+          Write-Host "Computer Name: $env:COMPUTERNAME"
+          Write-Host "PowerShell Version:"
+          $PSVersionTable.PSVersion
+
+      - name: Check Git Installation
+        shell: powershell
+        run: |
+          git --version
+
+      - name: List Repository Files
+        shell: powershell
+        run: |
+          Get-ChildItem
