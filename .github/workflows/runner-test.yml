@@ -8,27 +8,61 @@ permissions:
 
 jobs:
   runner-test:
-    name: Test Windows Runner
+    name: Verify Windows DevOps Tools
     runs-on: [self-hosted, Windows, X64]
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Display Runner Information
+      - name: Check Windows and PowerShell
         shell: powershell
         run: |
-          Write-Host "GitHub Actions Runner is working!"
-          Write-Host "Computer Name: $env:COMPUTERNAME"
-          Write-Host "PowerShell Version:"
+          Write-Host "Windows Self-Hosted Runner is working"
+          Write-Host "Computer: $env:COMPUTERNAME"
           $PSVersionTable.PSVersion
 
-      - name: Check Git Installation
+      - name: Check Git
         shell: powershell
         run: |
           git --version
 
-      - name: List Repository Files
+      - name: Check Terraform
         shell: powershell
         run: |
-          Get-ChildItem
+          terraform --version
+          if ($LASTEXITCODE -ne 0) {
+            throw "Terraform check failed"
+          }
+
+      - name: Check TFLint
+        shell: powershell
+        run: |
+          tflint --version
+          if ($LASTEXITCODE -ne 0) {
+            throw "TFLint check failed"
+          }
+
+      - name: Check tfsec
+        shell: powershell
+        run: |
+          tfsec --version
+          if ($LASTEXITCODE -ne 0) {
+            throw "tfsec check failed"
+          }
+
+      - name: Check Checkov
+        shell: powershell
+        run: |
+          checkov --version
+          if ($LASTEXITCODE -ne 0) {
+            throw "Checkov check failed"
+          }
+
+      - name: Check Azure CLI
+        shell: powershell
+        run: |
+          az --version
+          if ($LASTEXITCODE -ne 0) {
+            throw "Azure CLI check failed"
+          }
